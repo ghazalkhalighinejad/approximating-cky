@@ -1,0 +1,9 @@
+[submodule "ndr"]
+	path = ndr
+	url = https://github.com/RobertCsordas/ndr.git
+[submodule "locallearner"]
+	path = locallearner
+	url = https://github.com/alexc17/locallearner.git
+[submodule "syntheticpcfg"]
+	path = syntheticpcfg
+	url = https://github.com/alexc17/syntheticpcfg.git
