@@ -17,6 +17,7 @@ import os
 from my_utils import ByLengthSampler
 from models.all_models import PretrainedThing, PretrainedThingHO
 import my_utils 
+sys.path.insert(0, "syntheticpcfg/syntheticpcfg/")
 from syntheticpcfg.syntheticpcfg import pcfg, utility
 from my_utils import ParseExample
 # sys.path.append("getdata/") # stupid hack to avoid unpickling issues
@@ -79,7 +80,7 @@ parser.add_argument("--cpu", action="store_true", help="If passed, will train on
 parser.add_argument("--nruns", type=int, default=1)
 parser.add_argument("--gseed", type=int, default=0)
 parser.add_argument("--load-pretrained", action="store_true", help="If passed, will load a model pretrained on mlm.")
-parser.add_argument("--pretrained-model-file", type=str, default="pretrained_model.pt")
+parser.add_argument("--pretrained-model-file", type=str, default=None)
 args = parser.parse_args()
 
 
@@ -457,7 +458,7 @@ def main():
     global IDX2NT 
 
     TRUE_PCFG = data["truepcfg"]
-    TRUE_PCFG.smooth_normalize()
+    # TRUE_PCFG.smooth_normalize()
     # sys.exit()
     IDX2NT = data["idx2nt"]
     # data["ntidx"], data["widxr"], data["posidxr"],data["truepcfg"], data["idx2nt"] = \
