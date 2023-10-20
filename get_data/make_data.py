@@ -3,8 +3,7 @@ import sys
 import numpy as np
 import torch
 from tqdm import tqdm
-sys.path.append("../syntheticpcfg")
-import pcfg
+from syntheticpcfg.syntheticpcfg import pcfg
 from numpy.random import RandomState
 from torch.nn.utils.rnn import pad_sequence
 import utility

@@ -2,6 +2,19 @@
 This code is adapted from the 'https://github.com/robertcsordas/ndr' repository.
 """
 
+from typing import Optional, Tuple, Union, List, Dict, Any, Callable
+import math
+import torch
+import torch.nn.functional as F
+import numpy as np
+from collections import Counter
+
+class AttentionMask:
+    src_length_mask: Optional[torch.Tensor]
+    position_mask: Optional[torch.Tensor]
+    
+ActivationFunction = Callable[[torch.Tensor], torch.Tensor]
+
 def sinusoidal_pos_embedding(d_model: int, max_len: int = 5000, pos_offset: int = 0,
                              device: Optional[torch.device] = None):
     pe = torch.zeros(max_len, d_model, device=device)

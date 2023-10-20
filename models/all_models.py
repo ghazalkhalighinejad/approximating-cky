@@ -8,8 +8,7 @@ import logging
 import sys
 
 from transformers import BertConfig, BertModel, AutoConfig, AutoModel, BertForMaskedLM, AutoTokenizer, PreTrainedTokenizerFast
-from .ndr.layers.transformer.ndr import NDREncoder
-# from .ndr.layers.transformer.universal_transformer import UTEncoder
+from models.ndr import NDREncoder
 
 
 logger = logging.getLogger(__name__)

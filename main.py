@@ -17,8 +17,7 @@ import os
 from my_utils import ByLengthSampler
 from models.all_models import PretrainedThing, PretrainedThingHO
 import my_utils 
-sys.path.insert(0, "syntheticpcfg/")
-from syntheticpcfg import utility
+from syntheticpcfg.syntheticpcfg import pcfg, utility
 from my_utils import ParseExample
 # sys.path.append("getdata/") # stupid hack to avoid unpickling issues
 
