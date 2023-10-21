@@ -1,1 +1,1 @@
-Code for "Approximating CKY with Transformers"
+This code repository implements the experiments described in "(Approximating CKY with Transformers)[https://arxiv.org/abs/2305.02386]" by Ghazal Khalighinejad, Ollie Liu, and Sam Wiseman, to appear in findings of EMNLP 2023.
