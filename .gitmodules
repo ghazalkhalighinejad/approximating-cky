@@ -1,3 +1,6 @@
 [submodule "syntheticpcfg"]
 	path = syntheticpcfg
 	url = https://github.com/alexc17/syntheticpcfg.git
+[submodule "self-attentive-parser"]
+	path = self-attentive-parser
+	url = https://github.com/ghazalkhalighinejad/self-attentive-parser.git
