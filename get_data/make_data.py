@@ -20,8 +20,6 @@ parser.add_argument("--seed", type=str, default=1)
 parser.add_argument("--data-path", type=str, default='')
 parser.add_argument("--save", type=str, default='save')
 parser.add_argument("--cpu", action="store_true")
-parser.add_argument("--pidx", type=int, default=1)
-parser.add_argument("--nprocs", type=int, default=40)
 parser.add_argument("--chunk-size", type=int, default=1)
 torch.backends.cuda.matmul.allow_tf32 = True
 
@@ -144,14 +142,10 @@ def tree_from_span(span, length, raw_pos, raw_sent):
         tree_with_idx[r] = tree_with_idx[l] = span
     return tree_with_idx[0]
 
-def get_parseexamples(nsamples, rules, emiss, roots, chunk_size=1, nprocs = 1, pidx = 1):
+def get_parseexamples(nsamples, rules, emiss, roots, chunk_size=1):
     device = roots.device
     total_time=0
     sents, all_sents, all_raw_pos, all_raw_sent, all_spans, true_trees = sampleK(K = int(nsamples)),[], [], [], [], []
-    nperproc = len(sents) // nprocs
-    sidx = (pidx - 1)*nperproc
-    eidx = pidx*nperproc if pidx < nprocs else len(sents)
-    sents = sents[sidx:eidx]
     for i in tqdm(range(0, len(sents), chunk_size)):
         chunk, lengths = [], []
         for j in range(i, min(i + chunk_size, len(sents))):
@@ -184,6 +178,6 @@ if __name__ == "__main__":
 
     device = torch.device("cpu") if args.cpu else torch.device("cuda")
     roots, rules, emiss = extract_params(device)
-    parse_examples = get_parseexamples(nsamples = args.nsamples, rules = rules, emiss = emiss, roots = roots, chunk_size = args.chunk_size, nprocs = args.nprocs, pidx= args.pidx)
+    parse_examples = get_parseexamples(nsamples = args.nsamples, rules = rules, emiss = emiss, roots = roots, chunk_size = args.chunk_size)
     torch.save({"trdata": parse_examples, "truepcfg": my_pcfg,
                 "ntidx": nt2i, "posidxr": pos2i,"widxr": wrd2i, "idx2nt":i2nt}, f"{args.save}.pt")
