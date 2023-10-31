@@ -177,54 +177,54 @@ def span_eval(predchart, truparse, mlr=False, check_compatibility=False):
         uoverlap += len(set(predspans) & set(goldspans))
     return loverlap, uoverlap, nspans, npredspans, sz, total_time
 
-def span_eval2(predchart, true_tree, mlr=False, check_compatibility=False, raw_pos = None, raw_sent = None, idx2nt =None):
-    """
-    predchart - bsz x T x T x K
-    truparse - bsz-length list of 3-tuples
-    """
-    T = predchart.size(1)
-    bsz = predchart.size(0)
-    difflogprob = 0
-    total_diff_mean_logprob = 0
-    total_valid_parses = 0
-    global TRUE_PCFG
-    for b in range(predchart.size(0)):
-        pred_tree = my_utils.stupid_extract_parse2(
-            predchart[b], T, mlr=mlr, check_compatibility=False, raw_pos=raw_pos[b], raw_sent=raw_sent[b], idx2nt=idx2nt)
-        pred_mean_logprob, pred_nrules, pred_flag = TRUE_PCFG.mean_log_prob(pred_tree, flag = False)  
-        true_mean_logprob, true_nrules, true_flag = TRUE_PCFG.mean_log_prob(true_tree[b], flag = False)
+# def span_eval2(predchart, true_tree, mlr=False, check_compatibility=False, raw_pos = None, raw_sent = None, idx2nt =None):
+#     """
+#     predchart - bsz x T x T x K
+#     truparse - bsz-length list of 3-tuples
+#     """
+#     T = predchart.size(1)
+#     bsz = predchart.size(0)
+#     difflogprob = 0
+#     total_diff_mean_logprob = 0
+#     total_valid_parses = 0
+#     global TRUE_PCFG
+#     for b in range(predchart.size(0)):
+#         pred_tree = my_utils.stupid_extract_parse2(
+#             predchart[b], T, mlr=mlr, check_compatibility=False, raw_pos=raw_pos[b], raw_sent=raw_sent[b], idx2nt=idx2nt)
+#         pred_mean_logprob, pred_nrules, pred_flag = TRUE_PCFG.mean_log_prob(pred_tree, flag = False)  
+#         true_mean_logprob, true_nrules, true_flag = TRUE_PCFG.mean_log_prob(true_tree[b], flag = False)
 
-        pred_mean_logprob = pred_mean_logprob / pred_nrules
-        true_mean_logprob = true_mean_logprob / true_nrules
+#         pred_mean_logprob = pred_mean_logprob / pred_nrules
+#         true_mean_logprob = true_mean_logprob / true_nrules
 
-        total_diff_mean_logprob += abs(true_mean_logprob - pred_mean_logprob)
+#         total_diff_mean_logprob += abs(true_mean_logprob - pred_mean_logprob)
 
-    return total_diff_mean_logprob/bsz, total_valid_parses
+#     return total_diff_mean_logprob/bsz, total_valid_parses
 
 
-def eval_function2(model, val_dataloader, check_compatibility=False,
-                  higher_order=False):
-    total_valloss, nval_batches = 0, 0
-    total_diff = 0
-    total_valid_parses = 0
-    sz = 0
-    global IDX2NT
-    for step, batch in enumerate(val_dataloader):
-        if higher_order:
-            outputs = model.get_loss_and_chart(**batch)
-        else:
-            with torch.no_grad():
-                outputs = model(return_chart=True, **batch)
-        total_valloss += outputs["loss"].item()
-        nval_batches += 1
-        sz += outputs["chart"].size(0)
-        diff, valid_parses = span_eval2(outputs["chart"], batch["true_tree"], mlr=model.mlr,
-                                check_compatibility=check_compatibility, raw_pos = batch["raw_pos"], raw_sent = batch["raw_sent"], idx2nt = IDX2NT)
+# def eval_function2(model, val_dataloader, check_compatibility=False,
+#                   higher_order=False):
+#     total_valloss, nval_batches = 0, 0
+#     total_diff = 0
+#     total_valid_parses = 0
+#     sz = 0
+#     global IDX2NT
+#     for step, batch in enumerate(val_dataloader):
+#         if higher_order:
+#             outputs = model.get_loss_and_chart(**batch)
+#         else:
+#             with torch.no_grad():
+#                 outputs = model(return_chart=True, **batch)
+#         total_valloss += outputs["loss"].item()
+#         nval_batches += 1
+#         sz += outputs["chart"].size(0)
+#         diff, valid_parses = span_eval2(outputs["chart"], batch["true_tree"], mlr=model.mlr,
+#                                 check_compatibility=check_compatibility, raw_pos = batch["raw_pos"], raw_sent = batch["raw_sent"], idx2nt = IDX2NT)
             
-        total_diff+= diff
-        total_valid_parses += valid_parses
+#         total_diff+= diff
+#         total_valid_parses += valid_parses
     
-    return total_diff/nval_batches, total_valid_parses/sz
+#     return total_diff/nval_batches, total_valid_parses/sz
 
 def eval_function(model, val_dataloader, calc_f=True, check_compatibility=False,
                   higher_order=False):
@@ -326,15 +326,15 @@ def training_function(train_dataloader, val_dataloader, logger, args, higher_ord
             higher_order=higher_order)
         print(f"loss {epvalloss:.5f} | LF {lf1:.5f} | UF {uf1:.5f}")
         print(f"time per sentence: {timepersent}")
-        delta_score, mean_valid_parses = eval_function2(
-        model, val_dataloader, check_compatibility=args.check_compat,
-        higher_order=higher_order)
+        # delta_score, mean_valid_parses = eval_function2(
+        # model, val_dataloader, check_compatibility=args.check_compat,
+        # higher_order=higher_order)
         
-        delta_score, mean_valid_parses = eval_function2(
-        model, val_dataloader, check_compatibility=args.check_compat,
-        higher_order=higher_order)
-        logger.info(
-            f"Delta {delta_score} | Mean valid parses {mean_valid_parses}")
+        # delta_score, mean_valid_parses = eval_function2(
+        # model, val_dataloader, check_compatibility=args.check_compat,
+        # higher_order=higher_order)
+        # logger.info(
+        #     f"Delta {delta_score} | Mean valid parses {mean_valid_parses}")
         # else:
 
         sys.exit(0)
@@ -379,12 +379,12 @@ def training_function(train_dataloader, val_dataloader, logger, args, higher_ord
         epvalloss, lf1, uf1, _ = eval_function(
             model, val_dataloader, check_compatibility=args.check_compat, calc_f=True,
             higher_order=higher_order)
-        # if eval2:
-        delta_score, mean_valid_parses = eval_function2(
-        model, val_dataloader, check_compatibility=args.check_compat,
-        higher_order=higher_order)
-        logger.info(
-            f"Val epoch {epoch} | Delta {delta_score} | Mean valid parses {mean_valid_parses}")
+        # # if eval2:
+        # delta_score, mean_valid_parses = eval_function2(
+        # model, val_dataloader, check_compatibility=args.check_compat,
+        # higher_order=higher_order)
+        # logger.info(
+        #     f"Val epoch {epoch} | Delta {delta_score} | Mean valid parses {mean_valid_parses}")
         # else:
         logger.info(
             f"Val epoch {epoch} | LF {lf1:.5f}")
